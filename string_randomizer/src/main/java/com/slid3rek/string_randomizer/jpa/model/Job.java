@@ -1,4 +1,4 @@
-package com.slid3rek.string_randomizer.jpa;
+package com.slid3rek.string_randomizer.jpa.model;
 
 
 import javax.persistence.*;
@@ -13,17 +13,19 @@ public class Job {
     private Integer id;
     private Integer min;
     private Integer max;
+    private Integer numberOfStrings;
     private String charset;
     private Boolean isRunning;
 
     private String url;
 
-    public Job(Integer min, Integer max, String charset, Boolean isRunning, String url){
-        this.min        = min;
-        this.max        = max;
-        this.charset    = charset;
-        this.isRunning  = isRunning;
-        this.url = url;
+    public Job(Integer min, Integer max, Integer numberOfStrings, String charset, Boolean isRunning, String url){
+        this.min                = min;
+        this.max                = max;
+        this.numberOfStrings    = numberOfStrings;
+        this.charset            = charset;
+        this.isRunning          = isRunning;
+        this.url                = url;
     }
 
     public Job() {
@@ -77,5 +79,13 @@ public class Job {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Integer getNumberOfStrings() {
+        return numberOfStrings;
+    }
+
+    public void setNumberOfStrings(Integer numberOfStrings) {
+        this.numberOfStrings = numberOfStrings;
     }
 }
