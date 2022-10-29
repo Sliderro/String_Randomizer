@@ -1,0 +1,13 @@
+package com.slid3rek.string_randomizer.jpa.repository;
+
+import com.slid3rek.string_randomizer.jpa.model.Job;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Set;
+
+@Repository
+public interface JobRepository extends JpaRepository<Job, Boolean> {
+
+    Set<Job> findAllByIsRunning(Boolean isRunning);
+}
