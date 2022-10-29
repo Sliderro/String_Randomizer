@@ -9,5 +9,11 @@ import java.util.Set;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Boolean> {
 
+    /**
+     * @param isRunning determines the state of a job.
+     * @return Set of jobs with chosen state.
+     */
     Set<Job> findAllByIsRunning(Boolean isRunning);
+
+
 }

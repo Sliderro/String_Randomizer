@@ -7,8 +7,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - /var/lib/mysql
-      - ./db/master.sql:/docker-entrypoint-initdb.d/1.sql
+      - db_data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: example
     networks:
@@ -22,6 +21,8 @@ services:
     build:
       context: ./string_randomizer/
     tty: true
+    volumes:
+      - db_data:/var/lib/server_app
     ports:
       - "8080:8080"
     networks:
@@ -37,3 +38,6 @@ services:
 
 networks:
   app:
+
+volumes:
+  db_data:
