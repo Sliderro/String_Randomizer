@@ -39,8 +39,8 @@ public class JobController {
 
         if (newJobDto.getMin() == null || newJobDto.getMax() == null ||
                 newJobDto.getNumberOfStrings() == null || newJobDto.getCharset() == null) {
-            return ResponseEntity.badRequest().body(new MessageResponse(
-                    "Your request has been denied, missing 1 or more attributes"));
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Your request has been denied, missing 1 or more attributes"));
         }
 
         int possibleStrings = 0;
@@ -53,17 +53,18 @@ public class JobController {
         }
 
         if (newJobDto.getNumberOfStrings() > possibleStrings) {
-            return ResponseEntity.badRequest().body(new MessageResponse(
-                    "Number of requested strings cannot exceed the number of possible unique strings"));
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Number of requested strings cannot exceed the number of possible unique strings"));
         }
 
         if (doesCharsetContainDuplicates(newJobDto.getCharset())) {
-            return ResponseEntity.badRequest().body(new MessageResponse(
-                    "Provided charset contains duplicated characters"));
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Provided charset contains duplicated characters"));
         }
 
         Job job = new Job(newJobDto.getMin(), newJobDto.getMax(), newJobDto.getNumberOfStrings(),
                 newJobDto.getCharset(), true, "");
+
         jobRepository.save(job);
 
         new Thread(new JobRunnable(job.getId(), job.getMin(), job.getMax(), job.getNumberOfStrings(), job.getCharset()))
@@ -72,6 +73,12 @@ public class JobController {
         return ResponseEntity.ok(new MessageResponse("Request Accepted. Your request ID is: " + job.getId()));
     }
 
+    /**
+     * Function that checks if a given charset contains duplicated characters.
+     *
+     * @param charset The charset to be checked for duplicates
+     * @return true if the charset contains duplicates, false otherwise.
+     */
     private boolean doesCharsetContainDuplicates(String charset) {
         char[] chars = charset.toCharArray();
         Set<Character> characters = new HashSet<>();
@@ -84,6 +91,11 @@ public class JobController {
         return false;
     }
 
+    /**
+     * Get request function that checks for a number of currently running jobs.
+     *
+     * @return Number of currently running jobs.
+     */
     @GetMapping()
     public ResponseEntity<?> getNumberOfRunningJobs() {
 
@@ -92,17 +104,28 @@ public class JobController {
         return ResponseEntity.ok(new RunningResponse(jobs.size()));
     }
 
-    @GetMapping(value = "/get-file/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    /**
+     * Get request function that allows you to download the file containing results of the previously completed job.
+     *
+     * @param id Identifier of the job.
+     * @return File with results of the job.
+     */
+    @GetMapping("/get-file/{id}")
     public ResponseEntity<?> downloadFile(@PathVariable Integer id) {
 
-        if(!jobRepository.existsById(id)){
+        if (!jobRepository.existsById(id)) {
             return ResponseEntity.badRequest().body(new MessageResponse("There is no job with requested id."));
         }
 
         Job job = jobRepository.findJobById(id);
         if (job.getRunning()) {
-            return ResponseEntity.badRequest().body(new MessageResponse(
-                    "Job generating requested results is still running"));
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Job generating requested results is still running"));
+        }
+
+        if (job.getUrl() == null){
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("An error occurred and the file for given job has never been created"));
         }
 
         byte[] fileBytes = null;

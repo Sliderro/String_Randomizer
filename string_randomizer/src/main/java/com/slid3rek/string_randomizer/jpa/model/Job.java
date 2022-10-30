@@ -19,19 +19,18 @@ public class Job {
 
     private String url;
 
-    public Job(Integer min, Integer max, Integer numberOfStrings, String charset, Boolean isRunning, String url){
-        this.min                = min;
-        this.max                = max;
-        this.numberOfStrings    = numberOfStrings;
-        this.charset            = charset;
-        this.isRunning          = isRunning;
-        this.url                = url;
+    public Job(Integer min, Integer max, Integer numberOfStrings, String charset, Boolean isRunning, String url) {
+        this.min = min;
+        this.max = max;
+        this.numberOfStrings = numberOfStrings;
+        this.charset = charset;
+        this.isRunning = isRunning;
+        this.url = url;
     }
 
     public Job() {
 
     }
-
 
     public Integer getId() {
         return id;

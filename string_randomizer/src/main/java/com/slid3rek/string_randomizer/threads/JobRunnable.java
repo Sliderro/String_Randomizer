@@ -12,13 +12,11 @@ import java.util.Set;
 
 public class JobRunnable implements Runnable {
 
-    //private final static double coefficient = 0.4;
     private final Integer id;
     private final Integer min;
     private final Integer max;
     private final Integer numberOfStrings;
     private final String charset;
-    private final Integer possibleStrings;
 
     public JobRunnable(Integer id, Integer min, Integer max, Integer numberOfStrings, String charset) {
         this.id = id;
@@ -26,7 +24,6 @@ public class JobRunnable implements Runnable {
         this.max = max;
         this.numberOfStrings = numberOfStrings;
         this.charset = charset;
-        this.possibleStrings = calculatePossibleStrings();
     }
 
     @Override
@@ -34,15 +31,11 @@ public class JobRunnable implements Runnable {
 
         Set<String> stringSet;
 
-        //todo: optimization of algorithm.
-        //if (calculatePossibleStrings() == Integer.MAX_VALUE || possibleStrings * coefficient > numberOfStrings) {
+
         stringSet = new LinkedHashSet<>();
         while (stringSet.size() < numberOfStrings) {
             stringSet.add(generateRandomString());
         }
-        //} else {
-        //    stringSet = generateRandomStringSet();
-        //}
 
         createFileFromSet(stringSet);
 
@@ -55,33 +48,31 @@ public class JobRunnable implements Runnable {
                 });
     }
 
-    private int calculatePossibleStrings() {
-        int returnValue = 0;
-        for (int i = this.min; i <= this.max; i++) {
-            returnValue += Math.pow(this.charset.length(), i);
-            if (!(returnValue < Integer.MAX_VALUE)) {
-                break;
-            }
-        }
-        return returnValue;
-    }
-
+    /**
+     * Method returns a randomly generated string with length between given constraints.
+     *
+     * @return Returns a randomly generated string.
+     */
     private String generateRandomString() {
-        Random r = new Random();
-        int noOfChars = r.nextInt(max - min+1) + min;
-        StringBuilder s = new StringBuilder();
+        Random random = new Random();
+
+        int noOfChars = random.nextInt(max - min + 1) + min;
+
+        StringBuilder stringBuilder = new StringBuilder();
+
         for (int i = 0; i < noOfChars; i++) {
-            int k = r.nextInt(charset.length());
-            s.append(charset.charAt(k));
+            int randomChar = random.nextInt(charset.length());
+            stringBuilder.append(charset.charAt(randomChar));
         }
-        return s.toString();
+
+        return stringBuilder.toString();
     }
 
-    private Set<String> generateRandomStringSet() {
-
-        return null;
-    }
-
+    /**
+     * Function creates a file from a given set of String objects.
+     *
+     * @param stringSet the set of String objects that need to be converted into the file.
+     */
     private void/*?*/ createFileFromSet(Set<String> stringSet) {
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter("./src/jobs/" + this.id + ".txt"));
