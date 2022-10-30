@@ -40,8 +40,7 @@ public class JobRunnable implements Runnable {
         createFileFromSet(stringSet);
 
         JobRepository jobRepository = BeanFetcherService.getBean(JobRepository.class);
-        jobRepository.findById(id).
-                map(job -> {
+        jobRepository.findById(id).map(job -> {
                     job.setRunning(false);
                     job.setUrl("./src/jobs/" + this.id + ".txt");
                     return jobRepository.save(job);
@@ -73,7 +72,7 @@ public class JobRunnable implements Runnable {
      *
      * @param stringSet the set of String objects that need to be converted into the file.
      */
-    private void/*?*/ createFileFromSet(Set<String> stringSet) {
+    private void createFileFromSet(Set<String> stringSet) {
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter("./src/jobs/" + this.id + ".txt"));
             for (String s : stringSet) {
