@@ -7,13 +7,15 @@ import org.springframework.stereotype.Repository;
 import java.util.Set;
 
 @Repository
-public interface JobRepository extends JpaRepository<Job, Boolean> {
+public interface JobRepository extends JpaRepository<Job, Integer> {
 
     /**
      * @param isRunning determines the state of a job.
      * @return Set of jobs with chosen state.
      */
     Set<Job> findAllByIsRunning(Boolean isRunning);
+
+    //Job findJobById(Integer id);
 
 
 }

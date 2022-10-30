@@ -7,19 +7,15 @@ import com.slid3rek.string_randomizer.jpa.repository.JobRepository;
 import com.slid3rek.string_randomizer.payload.MessageResponse;
 import com.slid3rek.string_randomizer.payload.RunningResponse;
 import com.slid3rek.string_randomizer.threads.JobRunnable;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Set;
 
 @RestController
@@ -76,6 +72,21 @@ public class JobController {
         Set<Job> jobs = jobRepository.findAllByIsRunning(true);
 
         return ResponseEntity.ok(new RunningResponse(jobs.size()));
+    }
+
+    @GetMapping(value = "/get-file/{id}",  produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<?> downloadFile(@PathVariable Integer id) {
+
+        byte[] fileBytes = null;
+        try {
+            fileBytes = Files.readAllBytes(Paths.get("./" + id + ".txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "./" + id + ".txt\"")
+                .body(fileBytes);
     }
 
 }
