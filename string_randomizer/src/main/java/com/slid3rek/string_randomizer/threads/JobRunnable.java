@@ -50,7 +50,7 @@ public class JobRunnable implements Runnable {
         jobRepository.findById(id).
                 map(job -> {
                     job.setRunning(false);
-                    job.setUrl("./" + this.id + ".txt");
+                    job.setUrl("./src/jobs/" + this.id + ".txt");
                     return jobRepository.save(job);
                 });
     }
@@ -68,7 +68,7 @@ public class JobRunnable implements Runnable {
 
     private String generateRandomString() {
         Random r = new Random();
-        int noOfChars = r.nextInt(max - min) + min;
+        int noOfChars = r.nextInt(max - min+1) + min;
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < noOfChars; i++) {
             int k = r.nextInt(charset.length());
@@ -84,7 +84,7 @@ public class JobRunnable implements Runnable {
 
     private void/*?*/ createFileFromSet(Set<String> stringSet) {
         try {
-            BufferedWriter out = new BufferedWriter(new FileWriter("./" + this.id + ".txt"));
+            BufferedWriter out = new BufferedWriter(new FileWriter("./src/jobs/" + this.id + ".txt"));
             for (String s : stringSet) {
                 out.write(s);
                 out.newLine();

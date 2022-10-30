@@ -22,7 +22,7 @@ services:
       context: ./string_randomizer/
     tty: true
     volumes:
-      - server_data:/var/lib/server_app
+      - server_data:/opt/app/src/jobs
     ports:
       - "8080:8080"
     networks:
