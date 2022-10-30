@@ -41,10 +41,10 @@ public class JobRunnable implements Runnable {
 
         JobRepository jobRepository = BeanFetcherService.getBean(JobRepository.class);
         jobRepository.findById(id).map(job -> {
-                    job.setRunning(false);
-                    job.setUrl("./src/jobs/" + this.id + ".txt");
-                    return jobRepository.save(job);
-                });
+            job.setRunning(false);
+            job.setUrl("./src/jobs/" + this.id + ".txt");
+            return jobRepository.save(job);
+        });
     }
 
     /**
