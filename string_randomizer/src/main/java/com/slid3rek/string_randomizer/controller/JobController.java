@@ -57,7 +57,7 @@ public class JobController {
                     "Number of requested strings cannot exceed the number of possible unique strings"));
         }
 
-        if(doesCharsetContainDuplicates(newJobDto.getCharset())){
+        if (doesCharsetContainDuplicates(newJobDto.getCharset())) {
             return ResponseEntity.badRequest().body(new MessageResponse(
                     "Provided charset contains duplicated characters"));
         }
@@ -76,7 +76,7 @@ public class JobController {
         char[] chars = charset.toCharArray();
         Set<Character> characters = new HashSet<>();
         for (char c : chars) {
-            if(characters.contains(c)){
+            if (characters.contains(c)) {
                 return true;
             }
             characters.add(c);
@@ -95,6 +95,16 @@ public class JobController {
     @GetMapping(value = "/get-file/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<?> downloadFile(@PathVariable Integer id) {
 
+        if(!jobRepository.existsById(id)){
+            return ResponseEntity.badRequest().body(new MessageResponse("There is no job with requested id."));
+        }
+
+        Job job = jobRepository.findJobById(id);
+        if (job.getRunning()) {
+            return ResponseEntity.badRequest().body(new MessageResponse(
+                    "Job generating requested results is still running"));
+        }
+
         byte[] fileBytes = null;
         try {
             fileBytes = Files.readAllBytes(Paths.get("./src/jobs/" + id + ".txt"));
@@ -103,7 +113,7 @@ public class JobController {
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "./" + id + ".txt\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + id + ".txt\"")
                 .body(fileBytes);
     }
 

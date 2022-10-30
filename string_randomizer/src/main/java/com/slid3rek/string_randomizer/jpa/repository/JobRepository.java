@@ -15,7 +15,7 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
      */
     Set<Job> findAllByIsRunning(Boolean isRunning);
 
-    //Job findJobById(Integer id);
+    Job findJobById(Integer id);
 
 
 }
