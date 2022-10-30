@@ -22,7 +22,7 @@ services:
       context: ./string_randomizer/
     tty: true
     volumes:
-      - db_data:/var/lib/server_app
+      - server_data:/var/lib/server_app
     ports:
       - "8080:8080"
     networks:
@@ -31,6 +31,9 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
+      resources:
+        limits:
+          memory: 12288M
     depends_on:
       - db
     environment:
@@ -41,3 +44,4 @@ networks:
 
 volumes:
   db_data:
+  server_data:
